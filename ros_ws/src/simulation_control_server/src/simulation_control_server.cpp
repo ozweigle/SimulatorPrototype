@@ -22,7 +22,7 @@ private:
 };
 
 ros::NodeHandle* SimulationControlServer::node_ptr_ = NULL;
-std::string SimulationControlServer::upload_path = "/home/ozweigle1/SimulatorPrototype/webinterface/uploads/";
+std::string SimulationControlServer::upload_path = "/var/www/SimulatorPrototype/uploads/";
 
 SimulationControlServer::SimulationControlServer(ros::NodeHandle* node_ptr)
 {
