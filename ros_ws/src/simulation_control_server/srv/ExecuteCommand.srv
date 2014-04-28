@@ -1,0 +1,7 @@
+bool launchfile
+bool node
+string package
+string name
+bool run
+---
+bool success

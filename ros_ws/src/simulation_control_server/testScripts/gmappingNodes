@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ $1 == "0" ] || [ $1 == "FALSE" ]; then
+    rostopic pub NodeControlServer/nodeControl node_control_server/NodeControl '{name: {data: "slam_gmapping"}, run: {data: FALSE}}' --once 
+
+else
+    rostopic pub NodeControlServer/nodeControl node_control_server/NodeControl '{name: {data: "slam_gmapping"}, run: {data: TRUE}}' --once
+
+fi

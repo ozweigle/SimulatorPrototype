@@ -1,0 +1,22 @@
+#!/bin/bash
+#killall -9 map_as_png
+#killall -9 farofocus_driver
+#killall -9 map_saver
+#killall -9 mjpeg_server
+#killall -9 node_control_server
+#killall -9 plan_server
+#killall -9 aggregator_node
+killall -9 simulation_control_server
+pid=`pgrep -f rosbridge`
+kill -9 $pid
+pid=`pgrep -f rosapi`
+kill -9 $pid
+pid=`pgrep -f brain_to_body`
+kill -9 $pid
+#pid=`pgrep -f guisaver.py`
+#kill -9 $pid
+#pid=`pgrep -f navigation_control.py`
+#kill -9 $pid
+killall -9 roscore
+killall -9 rosmaster
+killall -9 rosout

@@ -1,0 +1,163 @@
+<html>
+<header>
+	<script type="text/javascript" src="scripts/client/ros.js"></script>
+    <script type="text/javascript" src="scripts/client/robotconnection.js"></script>
+    <script type="text/javascript" src="scripts/client/roscommands.js"></script>
+    <script type="text/javascript" src="scripts/client/ros_compatible.js"></script>
+    <script type="text/javascript" src="scripts/client/ros_amd.js"></script>
+    
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/EaselJS/current/easeljs.min.js"></script>
+	<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+	<script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+	<script type="text/javascript" src="http://cdn.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
+    
+    <script type="text/javascript">
+  /**
+   * Setup all GUI elements when the page is loaded.
+   */
+  function initViewer() {
+    // Connect to ROS.
+    //var ros = new ROSLIB.Ros({
+    //  url : 'ws://129.69.216.152:9090'
+    //});
+
+    // Create the main viewer.
+    // Create the main viewer.
+    var viewer = new ROS2D.Viewer({
+      divID : 'map',
+      width : 600,
+      height : 500
+    });
+
+    // Setup the map client.
+    var gridClient = new ROS2D.OccupancyGridClient({
+      ros : ros,
+      rootObject : viewer.scene
+    });
+  }
+</script>
+
+<form name="connectForm">
+	  Server:
+	  <input name="serverName" value="129.69.216.152" type="text" />
+	  Port:     	
+	  <input name="portNumber" value="9090" type="text" />
+      	  <input type="button" name="connectButton" value="Connect" id="connectButton"
+		 onclick="connectToRobot(document.connectForm.serverName.value, document.connectForm.portNumber.value)" />
+	  <t id="statusConnect">Not Connected</t>
+	</form>
+</header>
+<body><h1>Simulator Prototype</h1>
+<script type="text/javascript" src="scripts/client/upclick-min.js"></script>
+<p>
+<table>
+<tr>
+<td bgcolor="#CCCCCC"><strong>Brain Model</strong></td><td bgcolor="#CCCCCC">&nbsp;</td><td bgcolor="#CCCCCC"><strong>Robot Model</strong></td><td bgcolor="#CCCCCC">&nbsp;</td><td bgcolor="#CCCCCC"><strong>Environment</strong> <strong>Model</strong></td>
+</tr>
+<tr>
+
+<td><input type="button" id="upload_brain_model" value="Load"></td>
+<td>&nbsp;</td>
+<td>
+<input type="button" id="upload_robot_model" value="Load">
+</td>
+<td>&nbsp;</td>
+<td>
+  <input type="button" id="upload_env_model" value="Load">
+</td>
+</tr>
+</table>
+</p>
+<p>
+ <input type="button" name="simulateButton" value="Simulate" id="simulateButton"
+		 onclick="connection.publish('/webgui_data/start_simulation', {data: true})" />
+ </p>
+ 
+
+
+<h1>Simulator Visualization</h1>
+<p>
+ <input type="button" name="viewerStartButton" value="StartViewer" id="viwerStartButton"
+		 onclick="initViewer()" />
+</p>
+  <div id="map"></div>
+
+<script type="text/javascript">
+
+  var upload_robot_model = document.getElementById('upload_robot_model');
+
+  upclick(
+     {
+      element: upload_robot_model,
+      action: 'scripts/server/after_upload.php',
+      onstart:
+        function(filename)
+        {
+			var split_string = filename.split("\\");
+			current_filename = "ROBOT_" + split_string[split_string.length - 1];
+			document.cookie = 'currentupload=ROBOT';
+			document.cookie = 'modelname='+filename;
+          alert('Start upload: '+filename);
+        },
+      oncomplete:
+        function(response_data) 
+        {
+		  publishCommand("/webgui_data/robot_model_name", {data: current_filename});
+          alert("File successfully uploaded");
+        }
+     });
+
+   var upload_brain_model = document.getElementById('upload_brain_model');
+
+   upclick(
+     {
+      element: upload_brain_model,
+      action: 'scripts/server/after_upload.php', 
+	  onstart:
+        function(filename)
+        {
+			var split_string = filename.split("\\");
+			current_filename = "BRAIN_" + split_string[split_string.length - 1];
+			document.cookie = 'currentupload=BRAIN';
+			document.cookie = 'modelname='+filename;
+          alert('Start upload: '+filename);
+        },
+      oncomplete:
+        function(response_data) 
+        {
+          alert('File has been successfully uploaded');
+		  publishCommand("/webgui_data/brain_model_name", {data: current_filename});
+        }
+     });
+
+var upload_env_model = document.getElementById('upload_env_model');
+
+  upclick(
+     {
+      element: upload_env_model,
+      action: 'scripts/server/after_upload.php', 
+      onstart:
+        function(filename)
+        {
+			var split_string = filename.split("\\");
+			current_filename = "ENV_" + split_string[split_string.length - 1];
+			document.cookie = 'currentupload=ENV';
+			document.cookie = 'modelname='+filename;
+          alert('Start upload: '+filename);
+        },
+      oncomplete:
+        function(response_data) 
+        {
+			publishCommand("/webgui_data/env_model_name", {data: current_filename});
+          	alert("File successfully uploaded");
+        }
+     });
+
+
+</script>
+
+<footer>
+	<div id="statusBar" style="padding: 0px 10px 0;">Status</div>
+      </footer>
+
+</body></html>
