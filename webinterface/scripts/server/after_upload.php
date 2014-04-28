@@ -1,6 +1,6 @@
 <?php
 $tmp_file_name = $_FILES['Filedata']['tmp_name'];
-$upload_path = '/var/www/SimulatorWebPrototype/uploads/';
+$upload_path = '/var/www/SimulatorPrototype/uploads/';
 if(isset($_COOKIE['currentupload']) && isset($_COOKIE['modelname'])){ 
 	$model_name = $_COOKIE['modelname'];
 	$split_name=explode("\\", $model_name);

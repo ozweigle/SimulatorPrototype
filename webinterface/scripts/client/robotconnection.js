@@ -15,6 +15,7 @@ var connectToRobot = function(server, port) {
 		connection.advertise('/webgui_data/brain_model_name', 'std_msgs/String');
 		connection.advertise('/webgui_data/robot_model_name', 'std_msgs/String');
 		connection.advertise('/webgui_data/env_model_name', 'std_msgs/String');
+		connection.advertise('/webgui_data/trans_func_name', 'std_msgs/String');
 		connection.advertise('/webgui_data/start_simulation', 'std_msgs/Bool');
 
 
