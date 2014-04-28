@@ -28,6 +28,10 @@ SimulationControlServer::SimulationControlServer(ros::NodeHandle* node_ptr)
 {
     node_ptr_ = node_ptr;
 
+    if (!node_ptr_->getParam("/web_config/upload_path", upload_path)) {
+        ROS_ERROR("No properly defined upload path for models. Please check this issue...");
+    }
+
     ROS_INFO("SimulationControlServer successfully started");
 }
 

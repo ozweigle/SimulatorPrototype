@@ -5,7 +5,7 @@ roscore &
 sleep 3
 rosrun rosapi rosapi &
 sleep 1
-rosrun simulation_control_server simulation_control_server &
+roslaunch simulation_control_server simulation_control_server.launch &
 sleep 1
 #rosrun node_control_server node_control_server &
 #sleep 1
