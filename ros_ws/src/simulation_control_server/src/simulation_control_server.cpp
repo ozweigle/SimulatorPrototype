@@ -28,7 +28,7 @@ SimulationControlServer::SimulationControlServer(ros::NodeHandle* node_ptr)
 {
     node_ptr_ = node_ptr;
 
-    ROS_INFO("NodeControlServer successfully started");
+    ROS_INFO("SimulationControlServer successfully started");
 }
 
 void SimulationControlServer::nodeControl(const simulation_control_server::SimulationControlConstPtr& control_msg) {
