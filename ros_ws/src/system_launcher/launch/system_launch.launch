@@ -4,7 +4,7 @@
 <node pkg="rosbridge_server" type="rosbridge_websocket" name="rosbridge_websocket" required = "true"/>
 <!--- SimulationControlServer -->
 <node pkg="simulation_control_server" type="simulation_control_server" name="simulation_control_server" required = "true">
-  <param name="/web_config/upload_path" value="/var/www/SimulatorPrototype/uploads"/>
+  <param name="/web_config/upload_path" value="/var/www/SimulatorPrototype/uploads/"/>
 </node>
 
 </launch>

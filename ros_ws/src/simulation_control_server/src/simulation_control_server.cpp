@@ -2,6 +2,12 @@
 #include <cstdlib>
 #include <std_msgs/String.h>
 #include <simulation_control_server/SimulationControl.h>
+#include <simulation_control_server/StartSimulation.h>
+#include <simulation_control_server/SetTransferFunction.h>
+
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 
 
 class SimulationControlServer
@@ -14,11 +20,16 @@ public:
     static void setRobotModel(const std_msgs::StringConstPtr& robot_model_msg);
     static void setBrainModel(const std_msgs::StringConstPtr& brain_model_msg);
     static void setEnvModel(const std_msgs::StringConstPtr& env_model_msg);
+    static bool setTransFunc(simulation_control_server::SetTransferFunction::Request &req,
+                             simulation_control_server::SetTransferFunction::Response &res);
 
 
 private:
     static ros::NodeHandle* node_ptr_;
     static std::string upload_path;
+
+    static std::string executeCommand(std::string cmd);
+    static bool fileExists(const std::string& name);
 };
 
 ros::NodeHandle* SimulationControlServer::node_ptr_ = NULL;
@@ -54,15 +65,18 @@ void SimulationControlServer::simulationStart(const std_msgs::BoolConstPtr& star
     std::string kill_command_mapping = "killall -9 slam_gmapping";
     system(kill_command_mapping.c_str());
 
-    std::string env_model, brain_model;
-    if (node_ptr_->getParam("/simulator_config/env_model", env_model) && node_ptr_->getParam("/simulator_config/brain_model", brain_model)) {
+    std::string env_model, brain_model, trans_func;
+    if (node_ptr_->getParam("/simulator_config/env_model", env_model) && node_ptr_->getParam("/simulator_config/brain_model", brain_model) &&
+            node_ptr_->getParam("/simulator_config/trans_func", trans_func) ) {
         std::string start_command = "rosrun stage_ros stageros " + env_model + " &";
         system(start_command.c_str());
         sleep(3);
-        std::string start_command_mapping = "rosrun gmapping slam_gmapping scan:=base_scan &";
+        std::string start_transfer_function = "python " + trans_func + " &";
+        system(start_transfer_function.c_str());
+        //std::string start_command_mapping = "rosrun gmapping slam_gmapping scan:=base_scan &";
         //system(start_command_mapping.c_str());
         std::string start_brain_simulation = "python " + brain_model;
-        system (start_brain_simulation.c_str());
+        system(start_brain_simulation.c_str());
     }
 
 }
@@ -82,6 +96,59 @@ void SimulationControlServer::setEnvModel(const std_msgs::StringConstPtr& env_mo
     node_ptr_->setParam("/simulator_config/env_model", env_model_file);
 }
 
+bool SimulationControlServer::setTransFunc(simulation_control_server::SetTransferFunction::Request &req,
+                                           simulation_control_server::SetTransferFunction::Response &res) {
+    std::string trans_func_file = upload_path + req.transfer_function_name;
+    //check if uploaded file really exists
+    if (fileExists(trans_func_file)) {
+        //now run a syntax test using cython
+        std::string test_command = "cython --embed " + trans_func_file + " -o /tmp/test.c";
+        std::string cython_return = executeCommand(test_command);
+        if (cython_return == "") {
+            res.success = true;
+            node_ptr_->setParam("/simulator_config/trans_func", trans_func_file);
+            ROS_ERROR("Success");
+        }
+        else {
+            std::string error_string = "The following error was encountered in the TransferFunction file: \n " + cython_return;
+            res.success = false;
+            res.error_string = error_string;
+            ROS_ERROR(error_string.c_str());
+        }
+    }
+    else {
+        res.success = false;
+        res.error_string = "File upload failed";
+    }
+
+    return true;
+}
+
+std::string SimulationControlServer::executeCommand(std::string cmd) {
+    std::string data;
+    FILE * stream;
+    const int max_buffer = 256;
+    char buffer[max_buffer];
+    cmd.append(" 2>&1");
+
+    stream = popen(cmd.c_str(), "r");
+    if (stream) {
+        while (!feof(stream))
+            if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
+        pclose(stream);
+    }
+    return data;
+}
+
+bool SimulationControlServer::fileExists(const std::string& name) {
+    if (FILE *file = fopen(name.c_str(), "r")) {
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 int main(int argc, char** argv)
 {
@@ -97,6 +164,8 @@ int main(int argc, char** argv)
             nh.subscribe<std_msgs::Bool>("webgui_data/start_simulation", 1,
                                                            SimulationControlServer::simulationStart);
 
+    //ros::ServiceServer startSimulatorSrv = nh.advertiseService("/simulation_control_server/startSimulation", SimulationControlServer)
+
     ros::Subscriber getRobotModelCmdSub_ =
             nh.subscribe<std_msgs::String>("/webgui_data/robot_model_name", 1,
                                                            SimulationControlServer::setRobotModel);
@@ -108,6 +177,13 @@ int main(int argc, char** argv)
     ros::Subscriber getEnvModelCmdSub_ =
             nh.subscribe<std_msgs::String>("/webgui_data/env_model_name", 1,
                                                            SimulationControlServer::setEnvModel);
+
+    //ros::Subscriber getTransFuncCmdSub_ =
+    //            nh.subscribe<std_msgs::String>("/webgui_data/trans_func_name", 1,
+    //                                                           SimulationControlServer::setTransFunc);
+
+    ros::ServiceServer setTransferFunctionSrv = nh.advertiseService("/simulation_control_server/set_transfer_function", SimulationControlServer::setTransFunc);
+
 
 
 
