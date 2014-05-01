@@ -25,5 +25,4 @@ sleep 1
 #sleep 1
 rosrun rosbridge_server rosbridge_websocket &
 sleep 1
-python /home/ozweigle1/HBP/ros_ws/src/brain_body_integrator/src/brain_to_body.py &
-
+python $ws/../src/brain_body_integrator/src/brain_to_body.py &
