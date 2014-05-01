@@ -21,9 +21,9 @@ Install Prototype:
 
 8.) Check put the prototype from github: git clone https://github.com/ozweigle/SimulatorPrototype.git
 
-9.) Create a symbolic link /var/www/SimulatorPrototype to <GIT_INSTALL_DIR>/SimulatorPrototype/webinterface
+9.) Create a symbolic link /var/www/SimulatorPrototype to GIT_INSTALL_DIR/SimulatorPrototype/webinterface
 
-10.) Test the Apache server. Go to http://<SERVER_IP>/SimulatorPrototype/
+10.) Test the Apache server. Go to http://SERVER_IP/SimulatorPrototype/
 
 11.) You should see the SimulatorPrototype Page now
 
@@ -33,10 +33,10 @@ Install Prototype:
       - sudo apt-get install ros-hydro-rosapi
       
 13.) add the following lines to your .bashrc:
-      - source /<GIT_INSTALL_DIR>/SimulatorPrototype/ros_ws/devel/setup.bash
-      - export PYTHONPATH=/<GIT_INSTALL_DIR>/SimulatorPrototype/nest_extensions/py_modules:$PYTHONPATH
+      - source /GIT_INSTALL_DIR/SimulatorPrototype/ros_ws/devel/setup.bash
+      - export PYTHONPATH=/GIT_INSTALL_DIR/SimulatorPrototype/nest_extensions/py_modules:$PYTHONPATH
       
-14.) Build the rosnodes. Go to /<GIT_INSTALL_DIR>/SimulatorPrototype/ros_ws/ and run catkin_make
+14.) Build the rosnodes. Go to /GIT_INSTALL_DIR/SimulatorPrototype/ros_ws/ and run catkin_make
 
 15.) Run the following launch file to start the system: roslaunch system_starter system_starter.launch
 
@@ -45,9 +45,9 @@ Install Prototype:
 
 System Usage:
 
-1.) Go to http://<YOUR_MACHINE_IP>/SimulatorPrototype
+1.) Go to http://YOUR_MACHINE_IP/SimulatorPrototype
 
-2.) Type <YOUR_MACHINE_IP> in the field SERVER and press connect
+2.) Type YOUR_MACHINE_IP in the field SERVER and press connect
 
 3.) If everything is running properly the message "Connected to ROS <YOUR_MACHINE_IP>" must be visible
 
