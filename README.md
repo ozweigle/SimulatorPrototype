@@ -19,7 +19,9 @@ Install Prototype:
       
 7.) Restart the Apache server
 
-8.) Check put the prototype from github: git clone https://github.com/ozweigle/SimulatorPrototype.git
+8.) Check put the prototype from github: 
+
+      - git clone https://github.com/ozweigle/SimulatorPrototype.git
 
 9.) Create a symbolic link /var/www/SimulatorPrototype to GIT_INSTALL_DIR/SimulatorPrototype/webinterface
 
@@ -38,9 +40,14 @@ Install Prototype:
       - source /GIT_INSTALL_DIR/SimulatorPrototype/ros_ws/devel/setup.bash
       - export PYTHONPATH=/GIT_INSTALL_DIR/SimulatorPrototype/nest_extensions/py_modules:$PYTHONPATH
       
-14.) Build the rosnodes. Go to /GIT_INSTALL_DIR/SimulatorPrototype/ros_ws/ and run catkin_make
+14.) Build the rosnodes. Execute:
 
-15.) Run the following launch file to start the system: roslaunch system_starter system_starter.launch
+      - cd /<GIT_INSTALL_DIR>/SimulatorPrototype/ros_ws/  
+      - run catkin_make
+
+15.) Run the following launch file to start the system: 
+
+      - roslaunch system_starter system_starter.launch
 
 16.) The system can now be used...
 
