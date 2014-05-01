@@ -41,9 +41,11 @@
 
 <body onload="registerUploadFunctions();" >
 
+<h1>Simulator Prototype</h1>
+
 <header>
   <form name="connectForm">
-Server:
+    Server:
     <input name="serverName" value="localhost" type="text" />
     Port:
     <input name="portNumber" value="9090" type="text" />
@@ -55,18 +57,14 @@ Server:
 
 
 <div class="mid">
-<h1>Simulator Prototype</h1>
-
+<h2>Experiment Settings</h2>
 <p>
 <table>
   <tr>
-    <td bgcolor="#CCCCCC"><strong>Brain Model</strong></td>
-    <td bgcolor="#CCCCCC">&nbsp;</td>
-    <td bgcolor="#CCCCCC"><strong>Robot Model</strong></td>
-    <td bgcolor="#CCCCCC">&nbsp;</td>
-    <td bgcolor="#CCCCCC"><strong>Environment</strong> <strong>Model</strong></td>
-    <td bgcolor="#CCCCCC">&nbsp;</td>
-    <td bgcolor="#CCCCCC"><strong>Transfer Function</strong></td>
+    <td>Brain Model</td>        <td>&nbsp;</td>
+    <td>Robot Model</td>        <td>&nbsp;</td>
+    <td>Environment Model</td>  <td>&nbsp;</td>
+    <td>Transfer Function</td>
   </tr>
   <tr>
     <td><input type="button" id="upload_brain_model" value="Load"></td>
@@ -83,7 +81,7 @@ Server:
   <input type="button" name="simulateButton" value="Simulate" id="simulateButton"
                  onclick="publishOnTopic(start_sim, {data: true})" />
 </p>
-<h1>Simulator Visualization</h1>
+<h2>Simulator Visualization</h2>
 <p>
   <input type="button" name="viewerStartButton" value="StartViewer" id="viwerStartButton"
 		 onclick="initViewer()" />
