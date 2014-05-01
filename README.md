@@ -49,7 +49,7 @@ System Usage:
 
 2.) Type YOUR_MACHINE_IP in the field SERVER and press connect
 
-3.) If everything is running properly the message "Connected to ROS <YOUR_MACHINE_IP>" must be visible
+3.) If everything is running properly the message "Connected to ROS YOUR_MACHINE_IP" must be visible
 
 4.) In the directory data, some example models can be found 
 
