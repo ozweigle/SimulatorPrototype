@@ -28,11 +28,13 @@ Install Prototype:
 11.) You should see the SimulatorPrototype Page now
 
 12.) Install rosbridge and rosapi:
+
       - sudo apt-get install ros-hydro-rosbridge-server
       - sudo apt-get install ros-hydro-rosbridge-suite
       - sudo apt-get install ros-hydro-rosapi
       
 13.) add the following lines to your .bashrc:
+
       - source /GIT_INSTALL_DIR/SimulatorPrototype/ros_ws/devel/setup.bash
       - export PYTHONPATH=/GIT_INSTALL_DIR/SimulatorPrototype/nest_extensions/py_modules:$PYTHONPATH
       
