@@ -1,5 +1,6 @@
+<!DOCTYPE HTML>
 <html>
-<header>
+<head>
   <script type="text/javascript" src="scripts/client/upclick-min.js"></script>
   <script type="text/javascript" src="scripts/client/robotconnection.js"></script>
   <script type="text/javascript" src="scripts/client/simulator_functions.js"></script>
@@ -12,17 +13,48 @@
   <script type="text/javascript" src="http://cdn.robotwebtools.org/EaselJS/current/easeljs.min.js"></script>
   <script type="text/javascript" src="http://cdn.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
 
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+</head>
+
+<script type="text/javascript">
+
+  /**
+   * Setup all GUI elements when the page is loaded.
+   */
+  function initViewer() {
+    // Create the main viewer.
+    var viewer = new ROS2D.Viewer({
+      divID : 'map',
+      width : 600,
+      height : 500
+    });
+
+    // Setup the map client.
+    var gridClient = new ROS2D.OccupancyGridClient({
+      ros : ros,
+      rootObject : viewer.scene
+    });
+  }
+
+</script>
+
+<body onload="registerUploadFunctions();" >
+
+<header>
   <form name="connectForm">
 Server:
-    <input name="serverName" value="129.69.216.152" type="text" />
+    <input name="serverName" value="localhost" type="text" />
     Port:
     <input name="portNumber" value="9090" type="text" />
     <input type="button" name="connectButton" value="Connect" id="connectButton"
-		 onclick="connectToRobot(document.connectForm.serverName.value, document.connectForm.portNumber.value)" />
+           onclick="connectToRobot(document.connectForm.serverName.value, document.connectForm.portNumber.value)" />
     <t id="statusConnect">Not Connected</t>
   </form>
 </header>
-<body>
+
+
+<div class="mid">
 <h1>Simulator Prototype</h1>
 
 <p>
@@ -57,42 +89,11 @@ Server:
 		 onclick="initViewer()" />
 </p>
 <div id="map"></div>
+</div>
+
 <footer>
-  <div id="statusBar" style="padding: 0px 10px 0;">Status</div>
+  <div id="statusBar">Status</div>
 </footer>
-
-
-<script type="text/javascript">
-    registerUploadFunctions()
-</script>
-
-  <script type="text/javascript">
-
-  /**
-   * Setup all GUI elements when the page is loaded.
-   */
-  function initViewer() {
-    // Connect to ROS.
-    //var ros = new ROSLIB.Ros({
-    //  url : 'ws://129.69.216.152:9090'
-    //});
-
-    // Create the main viewer.
-    // Create the main viewer.
-    var viewer = new ROS2D.Viewer({
-      divID : 'map',
-      width : 600,
-      height : 500
-    });
-
-    // Setup the map client.
-
-    var gridClient = new ROS2D.OccupancyGridClient({
-      ros : ros,
-      rootObject : viewer.scene
-    });
-  }
-</script>
 
 </body>
 </html>

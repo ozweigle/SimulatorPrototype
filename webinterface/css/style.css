@@ -1,0 +1,39 @@
+
+body {
+        font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+        background: #fff;
+        margin: 0;
+        padding: 0;
+        color: #000;
+}
+
+header {
+        padding: 5px 11px 5px;
+        background: #3355cc;
+        color: #fff;
+        font-size:90%;
+}
+
+.mid {
+    margin: 20px;
+    padding: 2px;
+    background: #fff;
+}
+
+
+
+footer {
+    padding: 5px 11px 5px;
+    bottom: 0px;
+    background: #3355cc;
+    color: #fff;
+    font-size:90%;
+}
+
+h1 {
+    color: #3355cc;
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+
