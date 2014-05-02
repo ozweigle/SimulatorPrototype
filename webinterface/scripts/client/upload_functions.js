@@ -18,8 +18,8 @@ function registerUploadFunctions() {
                     oncomplete:
                     function(response_data)
                     {
-                        publishOnTopic(robot_model, {data: current_filename});
-                        alert('File has been successfully uploaded');
+                        publishOnTopic(topic_robot_model, {data: current_filename});
+                        alert('Robot Model has been successfully uploaded');
                     }
                 });
 
@@ -40,8 +40,8 @@ function registerUploadFunctions() {
                     oncomplete:
                     function(response_data)
                     {
-                        publishOnTopic(brain_model, {data: current_filename});
-                        alert('File has been successfully uploaded');
+                        publishOnTopic(topic_brain_model, {data: current_filename});
+                        alert('Brain Model has been successfully uploaded');
                     }
                 });
 
@@ -62,8 +62,8 @@ function registerUploadFunctions() {
                     oncomplete:
                     function(response_data)
                     {
-                        publishOnTopic(env_model, {data: current_filename});
-                        alert('File has been successfully uploaded');
+                        publishOnTopic(topic_env_model, {data: current_filename});
+                        alert('Environment has been successfully uploaded');
                     }
                 });
 

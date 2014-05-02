@@ -52,3 +52,12 @@ a:hover {
     color: #b3d4fc;
     cursor: pointer;
 }
+
+
+.ajax-upload-dragdrop {
+    border: 2px dotted #0079a6;
+    color: #DADCE3;
+    padding: 10px 10px 0px 10px;
+    margin-bottom: 4px;
+}
+
