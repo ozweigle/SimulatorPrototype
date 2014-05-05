@@ -3,6 +3,7 @@ var robotconnection = robotconnection || {};
 var connection = null;
 
 var connectToRobot = function(server, port) {
+    SetAllButtonFilenames();
     global_server_address = server;
      var statusConnect = document.getElementById('statusConnect');
     statusConnect.innerText = "Connecting to robot at " + server.innerText + ":" + port;
@@ -56,6 +57,9 @@ var registerTopics = function() {
 }
 
 var publishOnTopic = function(topic_handler, msg_json) {
+    if (!topic_handler) {
+        alert("Topic does not exist. Check your connection to the ROS server.");
+    }
     var rosmsg = new ROSLIB.Message(msg_json);
     topic_handler.publish(rosmsg);
 }

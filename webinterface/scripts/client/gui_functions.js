@@ -13,22 +13,18 @@ function transferFunctionCallback(result) {
 };
 
 function SetUploadButtonText(key, text) {
-    element = document.getElementById(key).previousSibling.firstChild.firstChild;
-	element.data = text;
+	// Wait untill upload items are loaded
+	element = null;
+	element = document.getElementById(key+"_file");
+	element.firstChild.data = text;
 };
 
 
 function SetAllButtonFilenames() {
-	
-	// Wait untill upload items are loaded
-	element = null;
-	while (!element) {
-		element = document.getElementById("upload_brain_model").previousSibling;
-	}
-    SetUploadButtonText("upload_brain_model", "Brain Model: ["+ ReadCookie("brain_model") +"]" );
-    SetUploadButtonText("upload_robot_model", "Robot Model:  [" + ReadCookie("robot_model") +"]" );
-    SetUploadButtonText("upload_env_model", "Environment Model: [" + ReadCookie("env_model") +"]" );
-    SetUploadButtonText("upload_trans_func", "Transfer Function: [" + ReadCookie("trans_func") +"]" );
+    SetUploadButtonText("Brain Model", ReadCookie("brain_model") );
+    SetUploadButtonText("Robot Model", ReadCookie("robot_model") );
+    SetUploadButtonText("Environment Model", ReadCookie("env_model") );
+    SetUploadButtonText("Transfer Function", ReadCookie("trans_func")  );
 };
 
 function InitUploadButtons() {
@@ -36,10 +32,14 @@ function InitUploadButtons() {
 		url:"upload.php",
 		allowedTypes:"py",
 		fileName:"myfile",
+		currentFile:ReadCookie("brain_model"),
 		onSuccess:function(files,data,xhr) {
 			$("#statusBar").html("Brain Model upload sucessful: " + files );
 			WriteCookie("brain_model", files);
             SetAllButtonFilenames();
+			try {
+				publishOnTopic(topic_brain_model, {data: brain_file});
+			} catch (err) {};
 		}
 	});
 
@@ -51,6 +51,9 @@ function InitUploadButtons() {
 			$("#statusBar").html("Robot Model upload sucessful: " + files );
 			WriteCookie("robot_model", files);
             SetAllButtonFilenames();
+			try {
+				publishOnTopic(topic_robot_model, {data: robot_file});
+			} catch (err) {};
 		}
 	});
 		
@@ -62,6 +65,9 @@ function InitUploadButtons() {
 			$("#statusBar").html("Environment Model upload sucessful: " + files );
 			WriteCookie("env_model", files);
             SetAllButtonFilenames();
+			try {
+				publishOnTopic(topic_env_model, {data: env_file});
+			} catch (err) {}
 		}
 	});
 		
@@ -73,6 +79,9 @@ function InitUploadButtons() {
 			$("#statusBar").html("Transfer Function upload sucessful: " + files );
 			WriteCookie("trans_func", files);
             SetAllButtonFilenames();
+			try {
+				setTransferFunctionService(trans_file, transferFunctionCallback);
+			} catch (err) {}
 		}
 	});
 }

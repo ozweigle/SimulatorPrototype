@@ -1,12 +1,13 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+
 	<!-- Local Scripts -->
-	<script type="text/javascript" src="scripts/client/upclick-min.js"></script>
+	<!--script type="text/javascript" src="scripts/client/upclick-min.js"></script-->
   	<script type="text/javascript" src="scripts/client/robotconnection.js"></script>
   	<script type="text/javascript" src="scripts/client/simulator_functions.js"></script>
   	<script type="text/javascript" src="scripts/client/gui_functions.js"></script>
-  	<script type="text/javascript" src="scripts/client/upload_functions.js"></script>
+  	<!--script type="text/javascript" src="scripts/client/upload_functions.js"></script-->
   
   	<!-- ROS Scripts -->
 	<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
@@ -15,12 +16,15 @@
 	<script type="text/javascript" src="http://cdn.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
 	
 	<!-- Uploader Script -->
-	<link href="https://rawgithub.com/hayageek/jquery-upload-file/master/css/uploadfile.css" rel="stylesheet">
+	<!--link href="https://rawgithub.com/hayageek/jquery-upload-file/master/css/uploadfile.css" rel="stylesheet"-->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script src="https://rawgithub.com/hayageek/jquery-upload-file/master/js/jquery.uploadfile.min.js"></script>
+	<!--script src="https://rawgithub.com/hayageek/jquery-upload-file/master/js/jquery.uploadfile.min.js"></script-->
+	<script type="text/javascript" src="scripts/client/uploadfile.js"></script>
+	<link rel="stylesheet" href="css/uploadfile.css" type="text/css" />
 
 	<!-- Local Style Sheets-->
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	
 
 </head>
 <script type="text/javascript">
@@ -92,7 +96,7 @@
 	}
 
 	/*
-  	 * On Document loaded
+  	 * On Document ready
  	 */
 	$(document).ready(function()
 	{
@@ -104,12 +108,11 @@
 	
 	// Setup upload script
 	InitUploadButtons();
-
-});
-
+	});
+	
 </script>
 
-<body onload="SetAllButtonFilenames();">
+<body>
 
 <h1>Simulator Prototype</h1>
 
@@ -141,7 +144,7 @@
 				 
 	<h2>Simulator Visualization</h2>
 	<p>
-  		<input type="button" name="viewerStartButton" value="StartViewer" id="viwerStartButton"
+  		<input type="button" name="viewerStartButton" value="StartViewer" id="viewerStartButton"
 		 	    onclick="initViewer()" />
 	<div id="map"></div>
 </div>
