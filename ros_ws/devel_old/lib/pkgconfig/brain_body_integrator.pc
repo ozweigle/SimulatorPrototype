@@ -1,8 +1,0 @@
-prefix=/media/psf/Home/SVNReps/HBPGit/SimulatorPrototype/ros_ws/devel
-
-Name: brain_body_integrator
-Description: Description of brain_body_integrator
-Version: 0.0.0
-Cflags: 
-Libs: -L/media/psf/Home/SVNReps/HBPGit/SimulatorPrototype/ros_ws/devel/lib 
-Requires: 
