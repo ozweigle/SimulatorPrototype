@@ -1,96 +1,156 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <script type="text/javascript" src="scripts/client/upclick-min.js"></script>
-  <script type="text/javascript" src="scripts/client/robotconnection.js"></script>
-  <script type="text/javascript" src="scripts/client/simulator_functions.js"></script>
-  <script type="text/javascript" src="scripts/client/gui_functions.js"></script>
-  <script type="text/javascript" src="scripts/client/upload_functions.js"></script>
+
+	<!-- Local Scripts -->
+	<!--script type="text/javascript" src="scripts/client/upclick-min.js"></script-->
+  	<script type="text/javascript" src="scripts/client/robotconnection.js"></script>
+  	<script type="text/javascript" src="scripts/client/simulator_functions.js"></script>
+  	<script type="text/javascript" src="scripts/client/gui_functions.js"></script>
+  	<!--script type="text/javascript" src="scripts/client/upload_functions.js"></script-->
   
-  <script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
-  <script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+  	<!-- ROS Scripts -->
+	<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+	<script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+	<script type="text/javascript" src="http://cdn.robotwebtools.org/EaselJS/current/easeljs.min.js"></script>
+	<script type="text/javascript" src="http://cdn.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
+	
+	<!-- Uploader Script -->
+	<!--link href="https://rawgithub.com/hayageek/jquery-upload-file/master/css/uploadfile.css" rel="stylesheet"-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<!--script src="https://rawgithub.com/hayageek/jquery-upload-file/master/js/jquery.uploadfile.min.js"></script-->
+	<script type="text/javascript" src="scripts/client/uploadfile.js"></script>
+	<link rel="stylesheet" href="css/uploadfile.css" type="text/css" />
 
-  <script type="text/javascript" src="http://cdn.robotwebtools.org/EaselJS/current/easeljs.min.js"></script>
-  <script type="text/javascript" src="http://cdn.robotwebtools.org/ros2djs/current/ros2d.min.js"></script>
-
-  <link rel="stylesheet" href="css/style.css" type="text/css" />
+	<!-- Local Style Sheets-->
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	
 
 </head>
-
 <script type="text/javascript">
 
-  /**
-   * Setup all GUI elements when the page is loaded.
-   */
-  function initViewer() {
-    // Create the main viewer.
-    var viewer = new ROS2D.Viewer({
-      divID : 'map',
-      width : 600,
-      height : 500
-    });
+	/*
+  	 * Setup all GUI elements when the page is loaded.
+ 	 */
+	function initViewer() {
+		// Create the main viewer.
+		var viewer = new ROS2D.Viewer({
+			divID : 'map',
+			width : 600,
+			height : 500
+		});
+			
+		// Setup the map client.
+    	var gridClient = new ROS2D.OccupancyGridClient({
+      		ros : connection,
+      		rootObject : viewer.scene
+    	});
+	}
+	
+	function WriteCookie(key,value) {
+		document.cookie = key + '=' + value; 
+	}
+	
+	function ReadCookie(key)	{
+   		cookiearr  =  document.cookie.split(';');
+		
+   		for(var i=0; i<cookiearr.length; i++) {
+			kvp = cookiearr[i].split('=');
+			if (kvp.length < 2) continue;
+			//alert(kvp);
+      		name = kvp[0].trim()
+      		value =kvp[1].trim();
+			if (name == key) {
+				return value;
+			}
+   		}
+		return "";   
+	}
+	
+	function StartSimulation() {
+		if(!connection) {
+			alert("You are not connected to ROS.")
+			return;
+		}
 
-    // Setup the map client.
-    var gridClient = new ROS2D.OccupancyGridClient({
-      ros : connection,
-      rootObject : viewer.scene
-    });
-  }
+		brain_file = ReadCookie("brain_model");
+		publishOnTopic(topic_brain_model, {data: brain_file});
+			
+		robot_file = ReadCookie("robot_model");
+		publishOnTopic(topic_robot_model, {data: robot_file});
+			
+		env_file = ReadCookie("env_model");
+		publishOnTopic(topic_env_model, {data: env_file});
+			
+		trans_file = ReadCookie("trans_func");
+		setTransferFunctionService(trans_file, transferFunctionCallback);
+	
+		/*alert("Starting Simulation with:\n" +
+			"Brain Model: " + brain_file + "\n" +
+			"Robot Model: " + robot_file + "\n" +
+			"Environment Model: " + env_file + "\n" +
+			"Transfer Function: " + trans_file);*/
+			
+		publishOnTopic(topic_start_sim, {data: true})
+		
+	}
 
+	/*
+  	 * On Document ready
+ 	 */
+	$(document).ready(function()
+	{
+	
+	// Retrieve cookie information
+	serverName =  ReadCookie("serverName");
+	if (serverName == "") serverName="localhost"
+	document.connectForm.serverName.value = serverName;
+	
+	// Setup upload script
+	InitUploadButtons();
+	});
+	
 </script>
 
-<body onload="registerUploadFunctions();" >
+<body>
 
 <h1>Simulator Prototype</h1>
 
 <header>
-  <form name="connectForm">
-    Server:
-    <input name="serverName" value="localhost" type="text" />
-    Port:
-    <input name="portNumber" value="9090" type="text" />
-    <input type="button" name="connectButton" value="Connect" id="connectButton"
-           onclick="connectToRobot(document.connectForm.serverName.value, document.connectForm.portNumber.value)" />
-    <t id="statusConnect">Not Connected</t>
-  </form>
+	<form name="connectForm">
+    	Server:
+    	<input name="serverName" value="localhost" type="text" />
+    	Port:
+    	<input name="portNumber" value="9090" type="text" />
+    	<input type="button" name="connectButton" value="Connect" id="connectButton"
+        	   onclick="connectToRobot(document.connectForm.serverName.value, document.connectForm.portNumber.value);
+			   			WriteCookie('serverName',document.connectForm.serverName.value);" />
+    	<t id="statusConnect">Not Connected</t>
+  	</form>
 </header>
 
 
 <div class="mid">
-<h2>Experiment Settings</h2>
-<p>
-<table>
-  <tr>
-    <td>Brain Model</td>        <td>&nbsp;</td>
-    <td>Robot Model</td>        <td>&nbsp;</td>
-    <td>Environment Model</td>  <td>&nbsp;</td>
-    <td>Transfer Function</td>
-  </tr>
-  <tr>
-    <td><input type="button" id="upload_brain_model" value="Load"></td>
-    <td>&nbsp;</td>
-    <td><input type="button" id="upload_robot_model" value="Load"></td>
-    <td>&nbsp;</td>
-    <td><input type="button" id="upload_env_model" value="Load"></td>
-    <td>&nbsp;</td>
-    <td><input type="button" id="upload_trans_func" value="Load"></td>
-  </tr>
-</table>
-</p>
-<p>
-  <input type="button" name="simulateButton" value="Simulate" id="simulateButton"
-                 onclick="publishOnTopic(topic_start_sim, {data: true})" />
-</p>
-<h2>Simulator Visualization</h2>
-<p>
-  <input type="button" name="viewerStartButton" value="StartViewer" id="viwerStartButton"
-		 onclick="initViewer()" />
-</p>
-<div id="map"></div>
+	<h2>Experiment Settings</h2>
+
+	<div id="upload_brain_model">Brain Model</div>
+	<div id="upload_robot_model">Robot Model</div>
+	<div id="upload_env_model"  >Environment Model</div>
+	<div id="upload_trans_func" >Transfer Function</div>
+
+	<p>
+  	<input type="button" name="simulateButton" value="Simulate" id="simulateButton"
+                 onclick="StartSimulation();" />
+				 
+	<h2>Simulator Visualization</h2>
+	<p>
+  		<input type="button" name="viewerStartButton" value="StartViewer" id="viewerStartButton"
+		 	    onclick="initViewer()" />
+	<div id="map"></div>
 </div>
 
 <footer>
-  <div id="statusBar">Status</div>
+	<div id="statusBar">Status</div>
 </footer>
 
 </body>
