@@ -5,7 +5,7 @@ $output_dir = "uploads/";
 
 if(!is_writable($output_dir))
 {
-	header("HTTP/1.1 500 Server error: The directory  '" . $output_dir . "'  must be writable to the group www-data. Use: '$ sudo chown www-data uploads'");
+	header("HTTP/1.1 500 Server error: The directory  '" . $output_dir . "'  must be writable to the group www-data. Use: '$ sudo chgrp www-data uploads'");
 	header('Content-Type: application/json; charset=UTF-8');
 	die(json_encode(array('message' => 'ERROR', 'code' => 100)));
 }

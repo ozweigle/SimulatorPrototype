@@ -30,33 +30,38 @@ Install Prototype:
 
       ln -s /<GIT_INSTALL_DIR>/SimulatorPrototype/webinterface /var/www/SimulatorPrototype  
 
-10.) Test the Apache server. Go to 
+10.) make uploads directory writable to apache
+     
+      cd /<GIT_INSTALL_DIR>/SimulatorPrototype/webinterface
+      sudo chgrp www-data uploads
+
+11.) Test the Apache server. Go to 
 
       http://<SERVER_IP>/SimulatorPrototype/
 
-11.) You should see the SimulatorPrototype Page now
+12.) You should see the SimulatorPrototype Page now
 
-12.) Install rosbridge and rosapi:
+13.) Install rosbridge and rosapi:
 
       sudo apt-get install ros-hydro-rosbridge-server
       sudo apt-get install ros-hydro-rosbridge-suite
       sudo apt-get install ros-hydro-rosapi
       
-13.) add the following lines to your .bashrc:
+14.) add the following lines to your .bashrc:
 
       source /<GIT_INSTALL_DIR>/SimulatorPrototype/ros_ws/devel/setup.bash
       export PYTHONPATH=/<GIT_INSTALL_DIR>/SimulatorPrototype/nest_extensions/py_modules:$PYTHONPATH
       
-14.) Build the rosnodes. Execute:
+15.) Build the rosnodes. Execute:
 
       cd /<GIT_INSTALL_DIR>/SimulatorPrototype/ros_ws/  
       run catkin_make
 
-15.) Run the following launch file to start the system: 
+16.) Run the following launch file to start the system: 
 
       roslaunch system_starter system_starter.launch
 
-16.) The system can now be used...
+17.) The system can now be used...
 
 
 System Usage:
