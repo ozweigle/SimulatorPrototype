@@ -1,28 +1,7 @@
 #!/bin/bash
-./basesystem_kill
-sleep 1
-roscore &
+roslaunch system_launcher system_launch.launch &
 sleep 3
-rosrun rosapi rosapi &
-sleep 1
-roslaunch simulation_control_server simulation_control_server.launch &
-sleep 1
-#rosrun node_control_server node_control_server &
-#sleep 1
-#rosrun mjpeg_server mjpeg_server &
-#sleep 1
-#roslaunch scanbot_diagnostics diagnostic_analyzer.launch &
-#sleep 1
-#roslaunch plan_server plan_server.launch &
-#sleep 1
-#rosrun sb_map_saver map_saver &
-#sleep 1
-#rosrun sb_guisaver guisaver.py &
-#sleep 1
-#rosrun farofocus_driver farofocus_driver &
-#sleep 1
-#rosrun sb_navigation navigation_control.py &
-#sleep 1
-rosrun rosbridge_server rosbridge_websocket &
-sleep 1
-python $ws/../src/brain_body_integrator/src/brain_to_body.py &
+rosrun gazebo_ros gzserver &
+sleep 3
+/opt/gzweb-1.1.0/start_gzweb.sh &
+
