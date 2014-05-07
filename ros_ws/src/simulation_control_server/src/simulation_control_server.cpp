@@ -4,8 +4,10 @@
 #include <simulation_control_server/SimulationControl.h>
 #include <simulation_control_server/StartSimulation.h>
 #include <simulation_control_server/SetTransferFunction.h>
+#include <gazebo_msgs/SpawnModel.h>
 
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,6 +24,7 @@ public:
     static void setEnvModel(const std_msgs::StringConstPtr& env_model_msg);
     static bool setTransFunc(simulation_control_server::SetTransferFunction::Request &req,
                              simulation_control_server::SetTransferFunction::Response &res);
+    static bool spawnRobotFile();
 
 
 private:
@@ -30,6 +33,7 @@ private:
 
     static std::string executeCommand(std::string cmd);
     static bool fileExists(const std::string& name);
+    static bool readFileToString(std::string& contents, const std::string& name);
 };
 
 ros::NodeHandle* SimulationControlServer::node_ptr_ = NULL;
@@ -68,8 +72,9 @@ void SimulationControlServer::simulationStart(const std_msgs::BoolConstPtr& star
     std::string env_model, brain_model, trans_func;
     if (node_ptr_->getParam("/simulator_config/env_model", env_model) && node_ptr_->getParam("/simulator_config/brain_model", brain_model) &&
             node_ptr_->getParam("/simulator_config/trans_func", trans_func) ) {
-        std::string start_command = "rosrun stage_ros stageros " + env_model + " &";
-        system(start_command.c_str());
+        //std::string start_command = "rosrun stage_ros stageros " + env_model + " &";
+        //system(start_command.c_str());
+        spawnRobotFile();
         sleep(3);
         std::string start_transfer_function = "python " + trans_func + " &";
         system(start_transfer_function.c_str());
@@ -124,6 +129,26 @@ bool SimulationControlServer::setTransFunc(simulation_control_server::SetTransfe
     return true;
 }
 
+bool SimulationControlServer::spawnRobotFile() {
+    std::string robot_model_file;
+    if (node_ptr_->getParam("/simulator_config/robot_model", robot_model_file)) {
+        if (fileExists(robot_model_file)) {
+            std::string robot_model;
+            if (readFileToString(robot_model, robot_model_file)) {
+                std::cout << "RobotModel:" << robot_model << std::endl;
+                ros::ServiceClient client = node_ptr_->serviceClient<gazebo_msgs::SpawnModel>("/gazebo/spawn_sdf_model");
+                gazebo_msgs::SpawnModel spawn_srv;
+                spawn_srv.request.model_name = "husky";
+                spawn_srv.request.model_xml = robot_model;
+                if (client.call(spawn_srv)) {
+                    return spawn_srv.response.success;
+                }
+            }
+        }
+
+    }
+}
+
 std::string SimulationControlServer::executeCommand(std::string cmd) {
     std::string data;
     FILE * stream;
@@ -149,6 +174,14 @@ bool SimulationControlServer::fileExists(const std::string& name) {
     }
 }
 
+bool SimulationControlServer::readFileToString(std::string& contents, const std::string& name) {
+    std::ifstream in(name.c_str());
+    std::stringstream buffer;
+    buffer << in.rdbuf();
+    std::string temp_contents(buffer.str());
+    contents = temp_contents;
+    return true;
+}
 
 int main(int argc, char** argv)
 {

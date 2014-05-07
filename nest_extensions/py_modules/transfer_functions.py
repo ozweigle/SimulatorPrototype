@@ -7,6 +7,7 @@ import thread
 roslib.load_manifest('rosapi')
 roslib.load_manifest('std_msgs')
 roslib.load_manifest('geometry_msgs')
+roslib.load_manifest('gazebo_msgs')
 
 from rosapi.srv import Topics
 from rosapi.srv import TopicType
@@ -14,6 +15,7 @@ from rosapi.srv import TopicType
 from std_msgs.msg import Float32
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
+from gazebo_msgs.msg import ModelState
 
 from threading import Thread
 
@@ -60,11 +62,19 @@ def connectToNestData(data_topic, callback_function):
 def getDataSendContainer(data_topic):
 	if data_topic == 'cmd_vel':
 		return Twist()
+	elif data_topic == 'husky_sim_speed':
+		model_state = ModelState()
+		model_state.model_name = 'husky'
+		return model_state
 		
 def sendToSimulator(data_topic, data):
 	if data_topic == 'cmd_vel':
-		cmd_vel_pub = rospy.Publisher('/cmd_vel', Twist)
+		cmd_vel_pub = rospy.Publisher('/husky/cmd_vel', Twist)
 		cmd_vel_pub.publish(data)
+	elif data_topic == 'husky_sim_speed':
+		husky_vel_pub = rospy.Publisher('/gazebo/set_model_state', ModelState)
+		husky_vel_pub.publish(data)
+		
 		
 def run():
 	try:
